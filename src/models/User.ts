@@ -1,4 +1,6 @@
-import axios, {AxiosResponse} from "axios";
+import {Eventing} from "./Eventing";
+import {Sync} from "./Sync";
+import {Attributes} from "./Attributes";
 
 interface UserProps {
   id?: number;
@@ -6,59 +8,16 @@ interface UserProps {
   age?: number;
 }
 
-type Callback = () => void;
+const rootUrl = "http://localhost:3000/users";
 
 export class User {
-  events: { [key: string]: Callback[] } = {};
-  private data: UserProps;
+  protected events: Eventing = new Eventing();
+  protected sync: Sync<UserProps> = new Sync<UserProps>(rootUrl);
+  protected attributes: Attributes<UserProps>;
 
-  constructor(data: UserProps) {
-    this.data = data;
+  constructor(attrs: UserProps) {
+    this.attributes = new Attributes<UserProps>(attrs);
   }
 
-  get(propName: string): UserProps {
-    return this.data[propName];
-  }
 
-  set(update: UserProps): void {
-    const {id, name, age} = update;
-
-    if (id && this.data.id != id) this.data.id = id;
-    if (name && this.data.name != name) this.data.name = name;
-    if (age && this.data.age != age) this.data.age = age;
-  }
-
-  on(eventName: string, callback: Callback): void {
-    const handlers = this.events[eventName] || [];
-    handlers.push(callback);
-    this.events[eventName] = handlers;
-  }
-
-  trigger(eventName: string): void {
-    const handlers = this.events[eventName];
-    if (!handlers || handlers.length == 0) return;
-
-    handlers.forEach(callback => {
-      callback();
-    })
-  }
-
-  fetch(): void {
-    axios.get(`http://localhost:3000/users/${this.get("id")}`)
-      .then((response: AxiosResponse): void => {
-        this.set(response.data);
-      })
-  }
-
-  save(): void {
-    const id = this.get("id");
-
-    if (id) { // Put if record exists
-      axios.put(`http://localhost:3000/users/${id}`, this.data)
-        .then((response: AxiosResponse) => {});
-    } else { // Post if record does not exist
-      axios.post(`http://localhost:3000/users`, this.data)
-        .then((response: AxiosResponse) => {});
-    }
-  }
 }

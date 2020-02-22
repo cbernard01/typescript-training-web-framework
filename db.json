@@ -2,22 +2,22 @@
   "users": [
     {
       "id": 1,
-      "name": "HorseName",
-      "age": 70
+      "name": "FirstName",
+      "age": 10
     },
     {
-      "name": "AnotherName",
-      "age": 50,
+      "name": "SecondName",
+      "age": 20,
       "id": 2
     },
     {
-      "name": "AnotherName",
-      "age": 50,
+      "name": "ThirdName",
+      "age": 30,
       "id": 3
     },
     {
-      "name": "AnotherName",
-      "age": 50,
+      "name": "FourthName",
+      "age": 40,
       "id": 4
     }
   ]
