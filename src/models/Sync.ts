@@ -11,7 +11,7 @@ export class Sync<T extends HasId> {
     this.rootUrl = rootUrl;
   }
 
-  fetch(id: number): AxiosPromise<T> {
+  fetch(id: number): AxiosPromise<T>{
     return axios.get(`${this.rootUrl}/${id}`);
   }
 
