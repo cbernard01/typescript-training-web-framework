@@ -1,7 +1,7 @@
 import {User} from "./models/User";
 
 
-const user = new User({id: 5, name: "FifthName", age: 50});
+const user = User.buildUser({id: 5, name: "FifthName", age: 50});
 
 console.log(user.get("id"));
 
@@ -16,5 +16,8 @@ user.on("save", ()=> {
 user.on("error", ()=> {
   console.log("error", user);
 });
-
 user.save();
+
+user.set({id: null, name: "SixthName", age: 60});
+user.save();
+
