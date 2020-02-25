@@ -1,23 +1,10 @@
 import {User} from "./models/User";
 
 
-const user = User.buildUser({id: 5, name: "FifthName", age: 50});
+const collection = User.buildCollection();
 
-console.log(user.get("id"));
+collection.fetch();
 
-user.on("change", ()=> {
-  console.log("change", user);
+collection.on("change", () => {
+  console.log(collection);
 });
-
-user.on("save", ()=> {
-  console.log("save", user);
-});
-
-user.on("error", ()=> {
-  console.log("error", user);
-});
-user.save();
-
-user.set({id: null, name: "SixthName", age: 60});
-user.save();
-
