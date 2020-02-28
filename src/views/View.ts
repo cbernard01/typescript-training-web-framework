@@ -1,9 +1,10 @@
-import {eventsObject} from "../utils/Types";
+import {eventsObject, regionObject, regionString} from "../utils/Types";
 import {Model} from "../models/Model";
 
 export abstract class View<T extends Model<K>, K> {
   parent: Element;
   model: T;
+  regions: regionObject = {};
 
   constructor(parent: Element, model: T) {
     this.parent = parent;
@@ -12,9 +13,15 @@ export abstract class View<T extends Model<K>, K> {
     this.bindModel();
   }
 
-  abstract eventsMap(): eventsObject;
-
   abstract template(): string;
+
+  regionsMap(): regionString {
+    return {};
+  }
+
+  eventsMap(): eventsObject {
+    return {};
+  };
 
   bindModel(): void {
     this.model.on("change", () => {
@@ -35,12 +42,33 @@ export abstract class View<T extends Model<K>, K> {
     }
   }
 
+  mapRegions(fragment: DocumentFragment): void {
+    const regionsMap = this.regionsMap();
+
+    for (let regionsKey in regionsMap) {
+      if (regionsMap.hasOwnProperty(regionsKey)) {
+        const selector = regionsMap[regionsKey];
+        const element = fragment.querySelector(selector);
+
+        if (element) this.regions[regionsKey] = element;
+      }
+    }
+  }
+
+  onRender(): void {
+  }
+
   render(): void {
     this.parent.innerHTML = "";
 
     const templateElement = document.createElement('template');
     templateElement.innerHTML = this.template();
+
     this.bindEvents(templateElement.content);
+    this.mapRegions(templateElement.content);
+
+    this.onRender();
+
     this.parent.append(templateElement.content);
   }
 }
