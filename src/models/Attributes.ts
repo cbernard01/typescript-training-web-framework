@@ -5,11 +5,11 @@ export class Attributes<T> {
     this.data = data;
   }
 
-  getAttr = <K extends keyof T>(key: K): T[K] => {
+  getAttribute = <K extends keyof T>(key: K): T[K] => {
     return this.data[key];
   };
 
-  getAllAttrs = (): T => {
+  getAllAttributes = (): T => {
     return this.data;
   };
 

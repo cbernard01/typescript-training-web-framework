@@ -1,10 +1,9 @@
 import {AxiosPromise, AxiosResponse} from "axios";
-
-type Callback = () => void
+import {Callback} from "../utils/Types";
 
 interface ModelAttributes<T> {
-  getAttr<K extends keyof T>(key: K): T[K];
-  getAllAttrs(): T;
+  getAttribute<K extends keyof T>(key: K): T[K];
+  getAllAttributes(): T;
   set(update: T): void;
 }
 
@@ -41,12 +40,12 @@ export class Model<T extends HasId> {
     return this.events.trigger;
   }
 
-  get getAttr() {
-    return this.attributes.getAttr;
+  get getAttribute() {
+    return this.attributes.getAttribute;
   }
 
-  get getAllAttrs() {
-    return this.attributes.getAllAttrs;
+  get getAllAttributes() {
+    return this.attributes.getAllAttributes;
   }
 
   set(update: T): void {
@@ -55,7 +54,7 @@ export class Model<T extends HasId> {
   }
 
   fetch(): void {
-    const id = this.getAttr("id");
+    const id = this.getAttribute("id");
 
     if (typeof id !== "number") {
       throw new Error("Cannot fetch without an id");
@@ -67,7 +66,7 @@ export class Model<T extends HasId> {
   }
 
   save(): void {
-    this.sync.save(this.getAllAttrs()).then((response: AxiosResponse): void => {
+    this.sync.save(this.getAllAttributes()).then((response: AxiosResponse): void => {
       this.set(response.data);
       this.trigger("save");
     }).catch((error)=> {
