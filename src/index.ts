@@ -1,15 +1,20 @@
-import {UserForm} from "./views/Users/UserForm";
 import {User} from "./models/User";
-import {UserShow} from "./views/Users/UserShow";
 import {UserEdit} from "./views/Users/UserEdit";
+import {UserList} from "./views/Users/UserList";
 
 const root = document.getElementById("root");
-const user = User.buildUser({name: "SeventhName", age: 70});
+const list = document.getElementById("list");
+const user = User.buildUser({name: "", age: 0});
+const userCollection = User.buildCollection();
+userCollection.fetch();
 
-if (root && user) {
+if (root && list) {
   const userEdit = new UserEdit(root, user);
   userEdit.render();
-  console.log(userEdit);
+
+  userCollection.on("change", ()=>{
+    new UserList(list, userCollection).render();
+  });
 } else {
   throw new Error("Root element not found");
 }
